@@ -89,37 +89,18 @@ Python 3.10 o superior
 - Crea un archivo .env en la raíz del proyecto:
    .env
 
-##📁 Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
-docchat/
-├── app/
-│   ├── __init__.py
-│   ├── main.py              # FastAPI y endpoints
-│   ├── core/
-│   │   ├── config.py        # Configuraciones y env vars
-│   │   └── dependencies.py  # Dependencias inyectables
-│   ├── services/
-│   │   ├── rag_engine.py    # Embeddings + ChromaDB
-│   │   ├── agent.py         # Agente LangChain
-│   │   └── llm_factory.py   # Fábrica de LLMs (Azure/HF)
-│   └── models/
-│       ├── schemas.py       # Pydantic models
-│       └── document.py      # Modelo de documento
-├── chroma_db/               # Base de datos vectorial (persistente)
-├── tests/
-│   ├── test_api.py
-│   ├── test_rag.py
-│   └── evaluation.json      # Dataset de prueba
-├── scripts/
-│   ├── ingest.py            # Script para indexar documentos
-│   └── evaluate.py          # Evaluador de respuestas
-├── docker/
-│   ├── Dockerfile
-│   └── docker-compose.yml
-├── requirements.txt
-├── .env.example
-└── README.md
+### 📂 Descripción de carpetas clave
 
+- **`app/`** – Contiene todo el código fuente de la API. Está dividido en:
+  - `core/`: Configuración y dependencias compartidas.
+  - `services/`: Implementación de la lógica de IA (RAG, agente, LLM).
+  - `models/`: Definiciones de datos con validación automática.
+- **`chroma_db/`** – Almacenamiento persistente de los vectores. Se genera automáticamente al indexar documentos.
+- **`tests/`** – Suite de pruebas para garantizar la calidad del código. Incluye un dataset de evaluación para medir precisión.
+- **`scripts/`** – Herramientas de línea de comandos para tareas administrativas (ingesta masiva, evaluación).
+- **`docker/`** – Configuración para contenerizar la aplicación y facilitar el despliegue en cualquier entorno.
 
 ## 🧠 Decisiones Técnicas Clave
 Decisión	Alternativa	Razón
