@@ -2,11 +2,10 @@
 
 > **Sistema de consulta inteligente sobre documentación técnica usando RAG (Retrieval-Augmented Generation) y Agentes Autónomos**
 
-[![Python 3.10+](https://www.python.org/downloads/)
-[![FastAPI](https://fastapi.tiangolo.com/)
-[![LangChain](https://www.langchain.com/)
-[![Docker](https://www.docker.com/)
-
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-green.svg)](https://fastapi.tiangolo.com/)
+[![LangChain](https://img.shields.io/badge/LangChain-0.2.0-orange.svg)](https://www.langchain.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
 ---
 
 ## 🎯 Descripción del Proyecto
