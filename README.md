@@ -118,8 +118,54 @@ Decisión	Alternativa	Razón
 □ Web UI: Interfaz gráfica con Streamlit o Gradio
 □ CI/CD: GitHub Actions para pruebas automáticas en cada push
 
+## 🔧 Configuración de GPU (Opcional pero Recomendado, solo si lo haces sin Docker)
 
-🤝 Contribución
+⚠️ Problema Común: PyTorch sin soporte CUDA
+Al instalar PyTorch con el comando estándar:
+
+```bash
+pip install torch torchvision
+```
+Python instala automáticamente la versión para CPU en sistemas Windows, incluso si tienes una GPU NVIDIA. Esto ocurre porque:
+
+El paquete torch en PyPI (Python Package Index) tiene dos versiones principales:
+
+torch (CPU) → Es la que se instala por defecto.
+
+torch con CUDA → Requiere un índice de descarga especial (--index-url https://download.pytorch.org/whl/cu121).
+
+Tu GPU (RTX 3060 Ti con CUDA 13.1) necesita una versión de PyTorch compilada con soporte CUDA para aprovechar su potencia.
+
+Si no indicas el índice correcto, pip instala la versión CPU, y al ejecutar torch.cuda.is_available() obtienes False o un error como:
+
+```bash
+AssertionError: Torch not compiled with CUDA enabled
+```
+No es un problema de tu GPU ni de tus drivers (tienes CUDA 13.1 y driver 591.86, que son compatibles). Es simplemente que el instalador de Python no sabe que tienes GPU a menos que se lo indiques explícitamente.
+
+
+## 🛠️ Solución: Reinstalar PyTorch con soporte CUDA
+Para que PyTorch detecte tu GPU, debes instalar la versión compilada con CUDA 12.1 (compatible hacia atrás con tu CUDA 13.1 y con cualquier versión CUDA 12.x).
+
+### Paso 1: Desinstalar PyTorch actual
+```bash
+pip uninstall torch torchvision torchaudio -y
+```
+
+### Paso 2: Instalar PyTorch con CUDA 12.1
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+```
+### Paso 3: Verificar que la GPU es detectada
+```bash
+python -c "import torch; print(f'CUDA disponible: {torch.cuda.is_available()}'); print(f'GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"No GPU\"}')"
+```
+Salida esperada:
+text
+CUDA disponible: True
+GPU: NVIDIA GeForce RTX 3060 Ti
+
+## 🤝 Contribución
 Fork el proyecto
 
 Crea tu rama: git checkout -b feature/nueva-funcionalidad
