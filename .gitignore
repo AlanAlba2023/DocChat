@@ -113,3 +113,6 @@ MANIFEST
 *.png
 *.gif
 *.ico
+*.pdf
+*.docx
+*.xlsx

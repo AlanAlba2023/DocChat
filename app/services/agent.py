@@ -1,5 +1,5 @@
 # ============================================
-# app/services/agent.py - Agente Autónomo
+# app/services/agent.py - Agente Autónomo (CORREGIDO)
 # ============================================
 
 import re
@@ -42,15 +42,12 @@ class AgentService:
             Tool(
                 name="RAG Search",
                 func=self._rag_search,
-                description="Útil para buscar información en los documentos indexados. " 
-                            "Entrada: una pregunta en lenguaje natural sobre el contenido de los documentos.",
+                description="Útil para buscar información en los documentos indexados. Entrada: una pregunta en lenguaje natural sobre el contenido de los documentos.",
             ),
             Tool(
                 name="Calculator",
                 func=self._calculator,
-                description="Útil para realizar operaciones matemáticas. " 
-                            "Entrada: una expresión matemática simple (ej. '2 + 2', '10 * 5'). "
-                            "No uses esta herramienta para preguntas sobre documentos.",
+                description="Útil para realizar operaciones matemáticas. Entrada: una expresión matemática simple (ej. '2 + 2', '10 * 5'). No uses esta herramienta para preguntas sobre documentos.",
             ),
         ]
         return tools
@@ -58,21 +55,12 @@ class AgentService:
     def _rag_search(self, query: str) -> str:
         """
         Herramienta RAG: Busca fragmentos relevantes en ChromaDB y los devuelve como texto.
-
-        Args:
-            query: La pregunta del usuario.
-
-        Returns:
-            Texto con los fragmentos más relevantes.
         """
         try:
-            # Recuperar fragmentos relevantes
             results = self.rag_engine.retrieve(query, top_k=4)
-
             if not results:
                 return "No se encontró información relevante en los documentos."
 
-            # Formatear los fragmentos en un texto legible
             formatted_results = []
             for i, result in enumerate(results, 1):
                 text = result["text"]
@@ -92,21 +80,12 @@ class AgentService:
     def _calculator(self, expression: str) -> str:
         """
         Herramienta Calculadora: Evalúa una expresión matemática simple.
-
-        Args:
-            expression: Expresión matemática (ej. "2 + 2 * 3").
-
-        Returns:
-            Resultado de la operación.
         """
-        # Limpiar la expresión: eliminar espacios y caracteres no permitidos
         expression = expression.replace(" ", "")
-        # Solo permitir números, operadores básicos y paréntesis
         if not re.match(r'^[\d+\-*/().]+$', expression):
             return "Error: La expresión contiene caracteres no permitidos."
 
         try:
-            # Evaluar la expresión (con restricciones de seguridad)
             result = eval(expression)
             return f"El resultado de {expression} es: {result}"
         except Exception as e:
@@ -115,11 +94,8 @@ class AgentService:
     def _create_agent(self) -> AgentExecutor:
         """
         Crea el agente con LangChain usando el enfoque ReAct.
-
-        Returns:
-            Un AgentExecutor listo para ejecutar consultas.
         """
-        # 1. Definir el prompt del agente (ReAct)
+        # 1. Definir el prompt del agente (ReAct) - CORREGIDO
         template = """
         Eres un asistente útil y preciso que responde preguntas usando herramientas disponibles.
 
@@ -131,7 +107,7 @@ class AgentService:
 
         Question: la pregunta del usuario
         Thought: piensa qué herramienta necesitas usar
-        Action: el nombre de la herramienta a usar (RAG Search o Calculator)
+        Action: el nombre de la herramienta a usar ({tool_names})
         Action Input: la entrada para la herramienta
         Observation: el resultado de la herramienta
         ... (este proceso puede repetirse si es necesario)
@@ -159,7 +135,7 @@ class AgentService:
             prompt=prompt,
         )
 
-        # 3. Crear el ejecutor del agente (con memoria si se desea)
+        # 3. Crear el ejecutor del agente
         memory = ConversationBufferMemory(
             memory_key="chat_history",
             return_messages=True,
@@ -169,9 +145,10 @@ class AgentService:
             agent=agent,
             tools=self.tools,
             memory=memory,
-            verbose=True,  # Muestra el razonamiento en consola (útil para depuración)
-            handle_parsing_errors=True,  # Maneja errores de parsing del agente
-            max_iterations=3,  # Límite de iteraciones para evitar bucles
+            verbose=True,
+            handle_parsing_errors=True,
+            max_iterations=3,
+            early_stopping_method="generate",  # Nuevo: evita errores de parsing
         )
 
         return agent_executor
@@ -179,37 +156,20 @@ class AgentService:
     def ask(self, question: str, session_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Procesa una pregunta del usuario usando el agente.
-
-        Args:
-            question: La pregunta del usuario.
-            session_id: ID de sesión para mantener contexto (futuro).
-
-        Returns:
-            Diccionario con:
-                - answer: Respuesta generada.
-                - sources: Lista de fuentes utilizadas.
-                - tool_used: Herramienta que usó el agente.
         """
         try:
             # Ejecutar el agente
             result = self.agent_executor.invoke({"input": question})
-
-            # Extraer la respuesta
             answer = result.get("output", "No se pudo generar una respuesta.")
 
-            # Determinar qué herramienta usó (si es posible)
-            # El agente no devuelve explícitamente la herramienta usada,
-            # pero podemos intentar inferirlo de la salida o dejarlo fijo.
-            # Para simplificar, dejamos "rag" como predeterminado si hay documentos.
+            # Determinar qué herramienta usó
             tool_used = "rag"
             if "calculator" in question.lower():
                 tool_used = "calculator"
 
-            # Extraer fuentes (si el agente usó RAG, podemos simularlas)
-            # En una implementación más avanzada, el agente devolvería metadatos.
+            # Extraer fuentes
             sources = []
             try:
-                # Si hay resultados de RAG, usamos los metadatos
                 rag_results = self.rag_engine.retrieve(question, top_k=3)
                 for res in rag_results:
                     sources.append({
@@ -219,10 +179,6 @@ class AgentService:
                     })
             except Exception:
                 pass
-
-            # Si no hay fuentes, devolvemos lista vacía
-            if not sources:
-                sources = []
 
             return {
                 "answer": answer,

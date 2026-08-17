@@ -1,17 +1,16 @@
 # ============================================
-# app/services/llm_factory.py - Fábrica de LLMs (solo Hugging Face)
+# app/services/llm_factory.py - Fábrica de LLMs (SOLO DeepSeek)
 # ============================================
 
 from typing import Optional
-from langchain_community.llms import HuggingFaceEndpoint
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from langchain_openai import ChatOpenAI
 
 from app.core.config import settings
 
 
 class LLMFactory:
     """
-    Fábrica para crear instancias del LLM usando Hugging Face Inference API.
+    Fábrica para crear instancias del LLM usando DeepSeek API.
     """
 
     @staticmethod
@@ -19,9 +18,9 @@ class LLMFactory:
         temperature: float = 0.7,
         max_tokens: int = 512,
         streaming: bool = False,
-    ) -> Optional[HuggingFaceEndpoint]:
+    ) -> Optional[ChatOpenAI]:
         """
-        Crea y retorna una instancia del LLM de Hugging Face.
+        Crea y retorna una instancia del LLM de DeepSeek.
 
         Args:
             temperature: Controla la creatividad (0.0 = determinista, 1.0 = creativo).
@@ -29,20 +28,18 @@ class LLMFactory:
             streaming: Si es True, habilita streaming de la respuesta.
 
         Returns:
-            Una instancia de HuggingFaceEndpoint o None si no hay token configurado.
+            Una instancia de ChatOpenAI configurada para DeepSeek.
         """
-        # Verificar que el token de Hugging Face está configurado
-        if not settings.HUGGINGFACEHUB_API_TOKEN:
-            print("⚠️ No se encontró HUGGINGFACEHUB_API_TOKEN en el archivo .env")
+        if not settings.DEEPSEEK_API_KEY:
+            print("⚠️ No se encontró DEEPSEEK_API_KEY en el archivo .env")
             print("   El agente no podrá funcionar sin un LLM.")
             return None
 
-        return HuggingFaceEndpoint(
-            repo_id="mistralai/Mistral-7B-Instruct-v0.3",  # Modelo gratuito y de buena calidad
-            huggingfacehub_api_token=settings.HUGGINGFACEHUB_API_TOKEN,
-            task="text-generation",
+        return ChatOpenAI(
+            model=settings.DEEPSEEK_MODEL,
+            api_key=settings.DEEPSEEK_API_KEY,
+            base_url=settings.DEEPSEEK_API_BASE,
             temperature=temperature,
-            max_new_tokens=max_tokens,
+            max_tokens=max_tokens,
             streaming=streaming,
-            callbacks=[StreamingStdOutCallbackHandler()] if streaming else None,
         )
