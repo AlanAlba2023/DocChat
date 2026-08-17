@@ -1,0 +1,61 @@
+# ============================================
+# FRAMEWORKS Y API
+# ============================================
+fastapi==0.111.0
+uvicorn[standard]==0.30.0
+python-multipart==0.0.9
+
+# ============================================
+# LANGCHAIN Y AGENTES
+# ============================================
+langchain==0.2.0
+langchain-community==0.2.0
+langchain-openai==0.1.0           # Para Azure OpenAI (opcional)
+langchain-huggingface==0.0.3      # Para embeddings HF
+
+# ============================================
+# EMBEDDINGS Y MODELOS (CON GPU)
+# ============================================
+sentence-transformers==2.7.0      # Modelo all-MiniLM-L6-v2
+transformers==4.41.2
+accelerate==0.30.0                # Optimización para GPU
+bitsandbytes==0.43.0              # Cuantización 4/8 bits (para LLM local)
+scipy==1.13.0                     # Dependencia de bitsandbytes
+
+# PyTorch con CUDA 12.1 (compatible con CUDA 13.1)
+# Usamos cu121 porque es la versión estable más cercana a tu CUDA
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.3.0+cu121
+torchvision==0.18.0+cu121
+
+# ============================================
+# LLM LOCAL CON LLAMA-CPP (RECOMENDADO)
+# ============================================
+# Instalación con soporte GPU cuBLAS
+# Descomenta la línea de abajo si prefieres instalar directamente con pip
+# llama-cpp-python==0.2.77
+
+# ============================================
+# VECTOR DB
+# ============================================
+chromadb==0.5.0
+
+# ============================================
+# PROCESAMIENTO DE DOCUMENTOS
+# ============================================
+pypdf==4.0.0
+
+# ============================================
+# UTILIDADES
+# ============================================
+python-dotenv==1.0.1
+pydantic==2.7.0
+pydantic-settings==2.2.0
+aiofiles==23.2.0
+
+# ============================================
+# PRUEBAS (opcional)
+# ============================================
+pytest==8.2.0
+pytest-asyncio==0.23.0
+httpx==0.27.0

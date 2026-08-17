@@ -1,0 +1,115 @@
+# ============================================
+# ENTORNO VIRTUAL Y DEPENDENCIAS LOCALES
+# ============================================
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# ============================================
+# ARCHIVOS DE PYTHON (bytecode, caché, etc.)
+# ============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+*.log
+
+# ============================================
+# ARCHIVOS SENSIBLES O PERSONALES
+# ============================================
+.env                # Variables de entorno con claves reales
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+*.sqlite3
+*.db
+
+# ============================================
+# DIRECTORIOS DE DATOS DEL PROYECTO
+# ============================================
+chroma_db/          # Base de datos vectorial persistente
+temp_uploads/       # Archivos temporales subidos
+uploads/
+data/
+
+# ============================================
+# IDE Y EDITORES
+# ============================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.iml
+.project
+.classpath
+
+# ============================================
+# GIT Y CONTROL DE VERSIONES
+# ============================================
+.git/
+.gitattributes
+.gitmodules
+*.orig
+
+# ============================================
+# DEPENDENCIAS DE NODE (si hubiera frontend)
+# ============================================
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ============================================
+# ARCHIVOS DE DOCKER (pero no el Dockerfile ni compose)
+# ============================================
+.dockerignore
+
+# ============================================
+# ARCHIVOS DE PRUEBAS Y COBERTURA
+# ============================================
+*.cover
+.coverage
+coverage.xml
+*.pytest_cache
+htmlcov/
+
+# ============================================
+# DISTRIBUCIONES / PACKAGES
+# ============================================
+build/
+dist/
+*.egg-info/
+*.egg
+MANIFEST
+
+# ============================================
+# OTROS ARCHIVOS INNECESARIOS
+# ============================================
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.iso
+*.mp4
+*.avi
+*.mov
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.ico
